@@ -4,6 +4,9 @@ import contextlib
 
 offset = (-2,0,2)
 
+class DummyFile(object):
+    def write(self, x): pass
+
 @contextlib.contextmanager
 def nostdout():
     save_stdout = sys.stdout
