@@ -3,7 +3,7 @@ import bgqshared
 import contextlib
 import ast
 
-offset = (-2,0,2) 
+offset = (-2,0,1,2) 
 
 class DummyFile(object):
     def write(self, x): pass
@@ -21,7 +21,7 @@ def path_len(path, conflictlinks):
     length = 0
     for i in range(len(conflictlinks)):
         if conflictlinks[i][0] in path:
-            print True
+            length += conflictlinks[i][1]
 
     return length
 
@@ -34,20 +34,13 @@ def path(pt1, pt2):
     p = bgqshared.determineLinkSet(l1)
     return p
 
-#get nodes in a communicator and put in a list
-def readNodeSet(file):
-  list = []
-  with open(file) as f:
-    for line in f.readlines():
-      list.append(ast.literal_eval(line))
-  return list
 
 def main(comm1,comm2):
     conflict_dict = []
     with nostdout():
         conflict_dict = bgqshared.main(comm1,comm2,1)
 
-    comm1_points = readNodeSet(comm1)
+    comm1_points = bgqshared.readNodeSet(comm1)
 
     max_len = 0
     max_path = []
