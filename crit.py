@@ -37,12 +37,16 @@ def path(pt1, pt2):
     return p
 
 def main(comm1,comm2):
+    path((0,0,0,0,0),(0,2,2,2,0))
+    sys.exit()
+    
     conflict_dict = []
     
     with nostdout():
         conflict_dict = bgqshared.main(comm1,comm2,1)
 
     comm1_points = bgqshared.readNodeSet(comm1)
+
 
     max_len = 0
     max_path = []

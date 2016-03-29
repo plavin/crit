@@ -30,13 +30,17 @@ def addLinksForward(source, index, numHops, linkSet):
   last = source
   for i in range(1, numHops+1):
     oneHopForward = source[0:index] + (source[index]+i,) + source[index+1:len(source)]
+    print "routing from", last, "to", oneHopForward
     linkSet[(last,oneHopForward)] += 1
+    last = oneHopForward
+
 
 def addLinksBackward(source, index, numHops, linkSet):
   last = source
   for i in range(1, numHops+1):
     oneHopBackward = source[0:index] + (source[index]-i,) + source[index+1:len(source)]
     linkSet[(last,oneHopBackward)] += 1
+    last = oneHopBackward
     
 #index is which of the five dimensions (A, B, C, D, E) we are moving in
 #source and dest are the source and dest nodes (a five-tuple; A, B, C, D, E)
@@ -90,11 +94,22 @@ def doRouting(nodeList, linkSet):
 
       for i in range(len(Dim)):
         newSource = moveDirection(sortedDim[i][0], source, dest, linkSet)
+        
+
+def doRoutingPatrick(source, dest, linkSet):
+  #move in each of the five directions, one at a time.  After a move in dimension i, source matches dest in dimension i
+  #order is sorted by decreasing dimension; ties broken lexicographically
+  sortedDim = sorted(list(enumerate(Dim)),key=lambda x: x[1],reverse=True)
+  
+  for i in range(len(Dim)):
+    newSource = moveDirection(sortedDim[i][0], source, dest, linkSet)
+    source = newSource
+
 
 #compute set of links that the first job uses
 def determineLinkSet(nodeListJobOne):
   linksJobOne = defaultdict(lambda: 0)  #all entries initialized to zero
-  doRouting(nodeListJobOne, linksJobOne)
+  doRoutingPatrick(nodeListJobOne[0], nodeListJobOne[1], linksJobOne)
   return linksJobOne
 
 #compute set of links that the second job causes
