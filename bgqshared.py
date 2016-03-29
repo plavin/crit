@@ -31,14 +31,12 @@ def addLinksForward(source, index, numHops, linkSet):
   for i in range(1, numHops+1):
     oneHopForward = source[0:index] + (source[index]+i,) + source[index+1:len(source)]
     linkSet[(last,oneHopForward)] += 1
-    last = oneHopForward
 
 def addLinksBackward(source, index, numHops, linkSet):
   last = source
   for i in range(1, numHops+1):
     oneHopBackward = source[0:index] + (source[index]-i,) + source[index+1:len(source)]
     linkSet[(last,oneHopBackward)] += 1
-    last = oneHopBackward
     
 #index is which of the five dimensions (A, B, C, D, E) we are moving in
 #source and dest are the source and dest nodes (a five-tuple; A, B, C, D, E)
@@ -64,6 +62,7 @@ def moveDirection(index, source, dest, linkSet):
       largeEnd = source[0:index] + (Dim[index]-1,) + source[index+1:len(source)]
       moveDirection(index, largeEnd, end, linkSet)
       linkSet[(smallEnd, largeEnd)] += 1  # this adds the wraparound link
+
     else:
       # two recursive calls to make two forward moves, then add wraparound link
       start = source[0:index] + (dest[index],) + source[index+1:len(source)]
@@ -88,6 +87,7 @@ def doRouting(nodeList, linkSet):
       #move in each of the five directions, one at a time.  After a move in dimension i, source matches dest in dimension i
       #order is sorted by decreasing dimension; ties broken lexicographically
       sortedDim = sorted(list(enumerate(Dim)),key=lambda x: x[1],reverse=True)
+
       for i in range(len(Dim)):
         newSource = moveDirection(sortedDim[i][0], source, dest, linkSet)
 

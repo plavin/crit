@@ -30,10 +30,15 @@ def path(pt1, pt2):
     l1.append(pt1)
     l1.append(pt2)
     p = bgqshared.determineLinkSet(l1)
+    if (len(p) == 12):
+        print pt1, pt2
+        print p
+        sys.exit(1)
     return p
 
 def main(comm1,comm2):
     conflict_dict = []
+    
     with nostdout():
         conflict_dict = bgqshared.main(comm1,comm2,1)
 
