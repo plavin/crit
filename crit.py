@@ -3,7 +3,7 @@ import bgqshared
 import contextlib
 import ast
 
-offset = (-2,0,1,2) 
+offset = (-2,1,0,1,2) 
 
 class DummyFile(object):
     def write(self, x): pass
@@ -29,17 +29,10 @@ def path(pt1, pt2):
     l1 = list()
     l1.append(pt1)
     l1.append(pt2)
-    p = bgqshared.determineLinkSet(l1)
-    if (len(p) == 12):
-        print pt1, pt2
-        print p
-        sys.exit(1)
+    p = bgqshared.determineLinkSetPatrick(l1)
     return p
 
 def main(comm1,comm2):
-    path((0,0,0,0,0),(0,2,2,2,0))
-    sys.exit()
-    
     conflict_dict = []
     
     with nostdout():
@@ -50,6 +43,7 @@ def main(comm1,comm2):
 
     max_len = 0
     max_path = []
+    endpoints = ()
     #measure each point to point distance
     for x in comm1_points:
         if x[4] == 1:
@@ -65,9 +59,11 @@ def main(comm1,comm2):
                             if l > max_len:
                                 max_len = l
                                 max_path = p
+                                endpoints = (x,x_prime)
 
-    print max_path
-    print "weight of most conflicted path: {}".format(max_len)
+#    print endpoints
+#    print max_path
+    print "{}".format(max_len)
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1],sys.argv[2]))
